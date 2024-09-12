@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House Price Estimator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group input[type="checkbox"] {
+            width: auto;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>House Price Estimator</h1>
+        <form id="priceForm">
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <div class="form-group">
+                <label for="size">Size (sq ft):</label>
+                <input type="number" id="size" name="size" required>
+            </div>
+            <div class="form-group">
+                <label for="bedrooms">Number of Bedrooms:</label>
+                <input type="number" id="bedrooms" name="bedrooms" required>
+            </div>
+            <div class="form-group">
+                <label for="bathrooms">Number of Bathrooms:</label>
+                <input type="number" id="bathrooms" name="bathrooms" required>
+            </div>
+            <div class="form-group">
+                <label for="yearBuilt">Year Built:</label>
+                <input type="number" id="yearBuilt" name="yearBuilt" required>
+            </div>
+            <div class="form-group">
+                <label for="garageSize">Garage Size:</label>
+                <input type="number" id="garageSize" name="garageSize">
+            </div>
+            <div class="form-group">
+                <label for="lotSize">Lot Size (sq ft):</label>
+                <input type="number" id="lotSize" name="lotSize">
+            </div>
+            <div class="form-group">
+                <label for="condition">Condition:</label>
+                <select id="condition" name="condition" required>
+                    <option value="new">New</option>
+                    <option value="good">Good</option>
+                    <option value="needs_renovation">Needs Renovation</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Additional Features:</label>
+                <div>
+                    <input type="checkbox" id="pool" name="features" value="pool">
+                    <label for="pool">Swimming Pool</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="fireplace" name="features" value="fireplace">
+                    <label for="fireplace">Fireplace</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="basement" name="features" value="basement">
+                    <label for="basement">Basement</label>
+                </div>
+            </div>
+            <button type="submit" class="button">Estimate Price</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('priceForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Collect data from the form
+            const formData = new FormData(this);
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Example of sending the data to the server (assuming a POST endpoint)
+            fetch('https://your-backend-api.com/predict-price', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                // Display the result
+                document.getElementById('result').textContent = `Estimated Price: $${result.price}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
