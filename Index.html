@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            display: flex;
+            display: block;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -59,55 +59,56 @@
         <h1>House Price Estimator</h1>
         <form id="priceForm">
             <div class="form-group">
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required>
+                <label for="CRIM">Crime Rate:</label>
+                <input type="number" id="CRIM" name="CRIM" step="any" required>
             </div>
             <div class="form-group">
-                <label for="size">Size (sq ft):</label>
-                <input type="number" id="size" name="size" required>
+                <label for="ZN">Residential Land Zoned:</label>
+                <input type="number" id="ZN" name="ZN" step="any" required>
             </div>
             <div class="form-group">
-                <label for="bedrooms">Number of Bedrooms:</label>
-                <input type="number" id="bedrooms" name="bedrooms" required>
+                <label for="INDUS">Non-Retail Business Acres:</label>
+                <input type="number" id="INDUS" name="INDUS" step="any" required>
             </div>
             <div class="form-group">
-                <label for="bathrooms">Number of Bathrooms:</label>
-                <input type="number" id="bathrooms" name="bathrooms" required>
+                <label for="CHAS">Charles River Dummy Variable:</label>
+                <input type="number" id="CHAS" name="CHAS" step="any" required>
             </div>
             <div class="form-group">
-                <label for="yearBuilt">Year Built:</label>
-                <input type="number" id="yearBuilt" name="yearBuilt" required>
+                <label for="NOX">Nitric Oxides Concentration:</label>
+                <input type="number" id="NOX" name="NOX" step="any" required>
             </div>
             <div class="form-group">
-                <label for="garageSize">Garage Size:</label>
-                <input type="number" id="garageSize" name="garageSize">
+                <label for="RM">Average Number of Rooms:</label>
+                <input type="number" id="RM" name="RM" step="any" required>
             </div>
             <div class="form-group">
-                <label for="lotSize">Lot Size (sq ft):</label>
-                <input type="number" id="lotSize" name="lotSize">
+                <label for="AGE">Proportion of Owner-Occupied Units Built Prior to 1940:</label>
+                <input type="number" id="AGE" name="AGE" step="any" required>
             </div>
             <div class="form-group">
-                <label for="condition">Condition:</label>
-                <select id="condition" name="condition" required>
-                    <option value="new">New</option>
-                    <option value="good">Good</option>
-                    <option value="needs_renovation">Needs Renovation</option>
-                </select>
+                <label for="DIS">Weighted Distances to Employment Centers:</label>
+                <input type="number" id="DIS" name="DIS" step="any" required>
             </div>
             <div class="form-group">
-                <label>Additional Features:</label>
-                <div>
-                    <input type="checkbox" id="pool" name="features" value="pool">
-                    <label for="pool">Swimming Pool</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="fireplace" name="features" value="fireplace">
-                    <label for="fireplace">Fireplace</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="basement" name="features" value="basement">
-                    <label for="basement">Basement</label>
-                </div>
+                <label for="RAD">Index of Accessibility to Radial Highways:</label>
+                <input type="number" id="RAD" name="RAD" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="TAX">Full-Value Property Tax Rate:</label>
+                <input type="number" id="TAX" name="TAX" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="PTRATIO">Pupil-Teacher Ratio:</label>
+                <input type="number" id="PTRATIO" name="PTRATIO" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="B">Proportion of Black Residents:</label>
+                <input type="number" id="B" name="B" step="any" required>
+            </div>
+            <div class="form-group">
+                <label for="LSTAT">Percentage of Lower Status of the Population:</label>
+                <input type="number" id="LSTAT" name="LSTAT" step="any" required>
             </div>
             <button type="submit" class="button">Estimate Price</button>
         </form>
@@ -118,15 +119,13 @@
         document.getElementById('priceForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Collect data from the form
             const formData = new FormData(this);
             const data = {};
             formData.forEach((value, key) => {
-                data[key] = value;
+                data[key] = parseFloat(value);
             });
 
-            // Example of sending the data to the server (assuming a POST endpoint)
-            fetch('https://your-backend-api.com/predict-price', {
+            fetch('http://127.0.0.1:5000/predict-price', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -135,11 +134,15 @@
             })
             .then(response => response.json())
             .then(result => {
-                // Display the result
-                document.getElementById('result').textContent = `Estimated Price: $${result.price}`;
+                if (result.price) {
+                    document.getElementById('result').textContent = `Estimated Price: $${result.price}`;
+                } else {
+                    document.getElementById('result').textContent = `Error: ${result.error}`;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('result').textContent = 'An error occurred.';
             });
         });
     </script>
