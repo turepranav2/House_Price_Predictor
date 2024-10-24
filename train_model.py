@@ -1,14 +1,13 @@
 import joblib
 import pandas as pd
 import numpy as np
-#from sklearn.datasets import load_boston
-from sklearn.datasets import fetch_california_housing # Use fetch_california_housing instead of load_boston
+from sklearn.datasets import fetch_california_housing 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.preprocessing import StandardScaler
 
-#boston = load_boston()
-housing = fetch_california_housing() # Use fetch_california_housing instead of load_boston
+
+housing = fetch_california_housing()
 data = pd.DataFrame(housing.data, columns=housing.feature_names)
 data['PRICE'] = housing.target
 
